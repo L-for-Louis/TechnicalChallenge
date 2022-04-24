@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    # image: mcr.microsoft.com/azure-sql-edge:latest # Use this in M1 Mac
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=P@ssw0rd
+    ports:
+      - 1433:1433
+    volumes:
+      - ./volume/mssql/data:/var/opt/mssql/data
+      - ./volume/mssql/log:/var/opt/mssql/log
+      - ./volume/mssql/secrets:/var/opt/mssql/secrets
+      # Used by Azure SQL Edge
+      # - ./volume/mssql-extensibility:/var/opt/mssql-extensibility
+      # - ./volume/mssql-extensibility/data:/var/opt/mssql-extensibility/data
+      # - ./volume/mssql-extensibility/log:/var/opt/mssql-extensibility/log
+
+  clubs:
+    image: clubs:latest
+    build:
+      context: .
+      dockerfile: Clubs/Dockerfile
+    ports:
+      - 10297:80
